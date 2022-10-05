@@ -36,6 +36,7 @@ def delete_group(group_id: int) -> None:
         s.query(Group).filter(Group.id == group_id).update({Group.status: DELETE})
         s.query(Save).filter(Save.group_id == group_id).update({Save.status: DELETE})
 
+
 def get_save(name: Optional[str] = None, group_name: Optional[str] = None) -> List:
     with session() as s:  # type: Session
         q: Query = s.query(Save, Group).filter(Save.status == ACTIVE)

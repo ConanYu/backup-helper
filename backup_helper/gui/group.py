@@ -1,9 +1,7 @@
 from typing import Optional
 
-import pyperclip
 from PyQt6.QtCore import Qt, QPoint
 from PyQt6.QtWidgets import (
-    QTableWidgetItem,
     QTableWidget,
     QHeaderView,
     QPushButton,
@@ -19,7 +17,6 @@ from PyQt6.QtWidgets import (
 
 from backup_helper.backend.access import get_group, add_group, update_group, delete_group
 from backup_helper.backend.backup import save
-from backup_helper.common import DELETE
 from backup_helper.gui.common import TableItem, cell_double_click_for_copy
 from backup_helper.gui.visible import control_visible_when_mode
 from backup_helper.util import sync
