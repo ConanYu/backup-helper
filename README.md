@@ -12,6 +12,8 @@
 
 Windows下提供exe文件打开即可使用，Mac下需要有python环境运行。
 
+**如果没有特殊需求，请不要操作`.data`文件夹。**
+
 ### Windows
 
 在release中下载exe文件，打开即可使用。
@@ -21,6 +23,10 @@ Windows下提供exe文件打开即可使用，Mac下需要有python环境运行�
 - 需要安装python环境
 - 编译：`pyinstaller -F -w -n backup-helper main.py`（编译产物位于dist文件夹中）
 - 运行：`python3 main.py`
+
+### 其他
+
+本项目会将需要删除的文件或文件夹先备份再覆盖，如果误操作了存档，可以尝试在`.data`文件夹中找回存档。
 
 ## 效果展示
 
