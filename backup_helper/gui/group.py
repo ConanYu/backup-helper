@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
 
 from backup_helper.backend.access import get_group, add_group, update_group, delete_group
 from backup_helper.backend.backup import save
-from backup_helper.gui.common import TableItem, cell_double_click_for_copy
+from backup_helper.gui.common import TableItem, cell_double_click_for_copy, wrap_exception
 from backup_helper.gui.visible import control_visible_when_mode
 from backup_helper.util import sync
 
@@ -82,23 +82,26 @@ class GroupTable(QTableWidget):
         pos.setY(pos.y() + 25)  # FIXME: 为什么这样才能对齐？
         action = menu.exec(self.mapToGlobal(pos))
         group_id = int(self.item(row, 0).text())
-        if action == save_empty_name_action:
-            save(group_id)
-            self.refresh()
-        elif action == save_action:
-            dialog = SaveSaveDialog()
-            result = dialog.exec()
-            if result:
-                save(group_id, dialog.message)
+        with wrap_exception(self):
+            if action == save_empty_name_action:
+                save(group_id)
+                QMessageBox.about(self, ' ', '保存成功')
                 self.refresh()
-        elif action == del_action:
-            self.delete_group_action(group_id)
-        elif action == update_action:
-            dialog = GroupDialog(self.item(row, 1).text(), self.item(row, 2).text(), True)
-            result = dialog.exec()
-            if result:
-                update_group(group_id, dialog.name.text(), dialog.path.text())
-                self.refresh()
+            elif action == save_action:
+                dialog = SaveSaveDialog()
+                result = dialog.exec()
+                if result:
+                    save(group_id, dialog.message)
+                    QMessageBox.about(self, ' ', '保存成功')
+                    self.refresh()
+            elif action == del_action:
+                self.delete_group_action(group_id)
+            elif action == update_action:
+                dialog = GroupDialog(self.item(row, 1).text(), self.item(row, 2).text(), True)
+                result = dialog.exec()
+                if result:
+                    update_group(group_id, dialog.name.text(), dialog.path.text())
+                    self.refresh()
 
 
 class GroupDialog(QDialog):

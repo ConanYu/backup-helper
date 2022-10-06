@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import (
 from backup_helper.backend.access import get_save, update_save
 from backup_helper.backend.backup import load
 from backup_helper.common import DELETE
-from backup_helper.gui.common import TableItem, cell_double_click_for_copy
+from backup_helper.gui.common import TableItem, cell_double_click_for_copy, wrap_exception
 from backup_helper.gui.visible import control_visible_when_mode
 from backup_helper.util import sync
 
@@ -117,18 +117,19 @@ class SaveTable(QTableWidget):
         pos.setY(pos.y() + 25)  # FIXME: 为什么这样才能对齐？
         save_id = int(self.item(row, 0).text())
         action = menu.exec(self.mapToGlobal(pos))
-        if action == load_action:
-            load(save_id)
-            QMessageBox.about(self, ' ', '加载完成')
-        elif action == update_action:
-            dialog = UpdateSaveDialog(self.item(row, 1).text())
-            result = dialog.exec()
-            if result:
-                update_save(save_id, dialog.message)
+        with wrap_exception(self):
+            if action == load_action:
+                load(save_id)
+                QMessageBox.about(self, ' ', '加载完成')
+            elif action == update_action:
+                dialog = UpdateSaveDialog(self.item(row, 1).text())
+                result = dialog.exec()
+                if result:
+                    update_save(save_id, dialog.message)
+                    self.refresh()
+            elif action == del_action:
+                update_save(save_id, status=DELETE)
                 self.refresh()
-        elif action == del_action:
-            update_save(save_id, status=DELETE)
-            self.refresh()
 
 
 class UpdateSaveDialog(QDialog):

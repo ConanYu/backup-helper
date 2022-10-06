@@ -11,10 +11,12 @@ from backup_helper.util import sync
 
 
 def is_file(path: str) -> bool:
+    if not os.path.exists(path):
+        raise RuntimeError(f'unknown error. path: "{path}" is not exist.')
     isfile = os.path.isfile(path)
     isdir = os.path.isdir(path)
     if (isfile and isdir) or (not isfile and not isdir):
-        raise RuntimeError(f'unknown error. path: {path}, isfile: {isfile}, isdir: {isdir}.')
+        raise RuntimeError(f'unknown error. path: "{path}", isfile: {isfile}, isdir: {isdir}.')
     return isfile
 
 
